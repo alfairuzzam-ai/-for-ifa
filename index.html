@@ -6,44 +6,63 @@
 <title>Happy Birthday 💖</title>
 
 <style>
+*{box-sizing:border-box}
 body{
   margin:0;
-  font-family:Arial,sans-serif;
-  background:linear-gradient(#7b0000,#000);
+  font-family:Arial, sans-serif;
   color:#fff;
+  background:#000;
   overflow-x:hidden;
 }
+
+/* BACKGROUND BLUR */
+.bg{
+  position:fixed;
+  inset:0;
+  background:url('foto4.jpg') center/cover no-repeat;
+  filter:blur(8px) brightness(.5);
+  z-index:-1;
+}
+
+/* CONTAINER */
 .container{
   max-width:420px;
-  margin:30px auto;
-  background:#111;
+  margin:20px auto;
+  background:#111c;
+  backdrop-filter:blur(6px);
   border-radius:20px;
   padding:20px;
   text-align:center;
-  position:relative;
 }
-.sub{color:pink;margin-bottom:15px}
 
 /* PASSWORD */
 #lock{
-  position:fixed; inset:0;
+  position:fixed;
+  inset:0;
   background:linear-gradient(#ff5f8a,#7b0000);
-  display:flex; flex-direction:column;
-  justify-content:center; align-items:center;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
   z-index:10;
 }
 #lock input{
-  padding:12px; border-radius:20px; border:none;
-  width:220px; text-align:center;
+  padding:12px;
+  border-radius:20px;
+  border:none;
+  width:220px;
+  text-align:center;
 }
 #lock button{
-  margin-top:15px; padding:12px 25px;
-  border:none; border-radius:30px;
-  background:#fff; color:#ff5f8a;
-  font-size:16px;
+  margin-top:15px;
+  padding:12px 25px;
+  border:none;
+  border-radius:30px;
+  background:#fff;
+  color:#ff5f8a;
 }
 
-/* SLIDESHOW ZOOM + GESER (8 FOTO) */
+/* SLIDER */
 .slider{
   position:relative;
   height:260px;
@@ -56,23 +75,15 @@ body{
   background-size:cover;
   background-position:center;
   opacity:0;
-  animation:kenburns 48s infinite;
+  animation:fade 55s infinite;
 }
-.slide:nth-child(1){animation-delay:0s}
-.slide:nth-child(2){animation-delay:6s}
-.slide:nth-child(3){animation-delay:12s}
-.slide:nth-child(4){animation-delay:18s}
-.slide:nth-child(5){animation-delay:24s}
-.slide:nth-child(6){animation-delay:30s}
-.slide:nth-child(7){animation-delay:36s}
-.slide:nth-child(8){animation-delay:42s}
+.slide:nth-child(n){animation-delay:calc((var(--i) - 1) * 5s)}
 
-@keyframes kenburns{
-  0%{opacity:0;transform:scale(1)}
+@keyframes fade{
+  0%{opacity:0}
   5%{opacity:1}
-  40%{opacity:1;transform:scale(1.1) translateX(-12px)}
-  45%{opacity:0}
-  100%{opacity:0}
+  20%{opacity:1}
+  25%{opacity:0}
 }
 
 /* BUTTON */
@@ -85,49 +96,54 @@ body{
   font-size:16px;
 }
 
-/* CAKE */
-.cake{margin:20px 0}
+/* LILIN 18 */
+.candles{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  font-size:48px;
+}
 .flame{
-  font-size:42px;
   cursor:pointer;
   animation:flicker .6s infinite;
 }
+.flame.dead{
+  opacity:.3;
+  pointer-events:none;
+}
 @keyframes flicker{50%{opacity:.5}}
-.number{font-size:48px;color:pink}
 
-/* TEXT */
-#text{
-  white-space:pre-line;
-  font-size:14px;
-  line-height:1.6;
-}
+/* QUESTION */
+#reaction{margin-top:10px;font-size:20px}
 
-/* BALON */
-.balloon{
-  position:fixed;
-  bottom:-100px;
-  font-size:36px;
-  animation:float 9s linear infinite;
-}
-@keyframes float{
-  to{transform:translateY(-120vh)}
-}
-
-/* CONFETTI PINK */
+/* CONFETTI */
 .confetti{
   position:fixed;
-  width:8px;height:8px;
-  top:-10px;
+  width:10px;
+  height:10px;
   background:pink;
-  animation:fall 8s linear forwards;
+  top:-10px;
+  animation:fall 9s linear forwards;
 }
 @keyframes fall{
   to{transform:translateY(110vh) rotate(360deg)}
+}
+
+/* HEARTS */
+.heart{
+  position:fixed;
+  bottom:0;
+  font-size:20px;
+  animation:floatUp 4s ease-out forwards;
+}
+@keyframes floatUp{
+  to{transform:translateY(-120vh);opacity:0}
 }
 </style>
 </head>
 
 <body>
+<div class="bg"></div>
 
 <!-- PASSWORD -->
 <div id="lock">
@@ -136,44 +152,51 @@ body{
   <button onclick="unlock()">Buka 💖</button>
 </div>
 
-<!-- BALON -->
-<div class="balloon" style="left:10%">🎈</div>
-<div class="balloon" style="left:30%">🎈</div>
-<div class="balloon" style="left:50%">🎈</div>
-<div class="balloon" style="left:70%">🎈</div>
-<div class="balloon" style="left:90%">🎈</div>
-
 <div class="container">
-<h1>🎉 Selamat Ulang Tahun 🎂</h1>
-<div class="sub">Dari seseorang yang spesial 💖</div>
+<h2>🎉 Selamat Ulang Tahun 🎂</h2>
 
-<!-- FOTO -->
-<class="slider">
-  <div class="slide" style="background-image:url('foto1.jpeg')"></div>
-  <div class="slide" style="background-image:url('foto2.jpeg')"></div>
-  <div class="slide" style="background-image:url('foto3.jpg')"></div>
-  <div class="slide" style="background-image:url('foto4.jpg')"></div>
-  <div class="slide" style="background-image:url('foto5.jpg')"></div>
-  <div class="slide" style="background-image:url('foto6.jpg')"></div>
-  <div class="slide" style="background-image:url('foto7.jpg')"></div>
-  <div class="slide" style="background-image:url('foto8.jpg')"></div>
-  <div class="slide" style="background-image:url('foto9.jpeg')"></div>
-  <div class="slide" style="background-image:url('foto10.jpeg')"></div>
-  <div class="slide" style="background-image:url('foto11.jpeg')"></div>
+<!-- SLIDER -->
+<div class="slider">
+  <div class="slide" style="--i:1;background-image:url('foto1.jpeg')"></div>
+  <div class="slide" style="--i:2;background-image:url('foto2.jpeg')"></div>
+  <div class="slide" style="--i:3;background-image:url('foto3.jpg')"></div>
+  <div class="slide" style="--i:4;background-image:url('foto4.jpg')"></div>
+  <div class="slide" style="--i:5;background-image:url('foto5.jpg')"></div>
+  <div class="slide" style="--i:6;background-image:url('foto6.jpg')"></div>
+  <div class="slide" style="--i:7;background-image:url('foto7.jpg')"></div>
+  <div class="slide" style="--i:8;background-image:url('foto8.jpg')"></div>
+  <div class="slide" style="--i:9;background-image:url('foto9.jpeg')"></div>
+  <div class="slide" style="--i:10;background-image:url('foto10.jpeg')"></div>
+  <div class="slide" style="--i:11;background-image:url('foto11.jpeg')"></div>
 </div>
 
 <div id="stageText"></div>
 
-<div id="final" style="display:none">
-  <div class="cake">
-    <div class="flame" id="flame" onclick="blowCandle()">🔥</div>
-    <div class="number">18</div>
-    <div style="color:pink;font-size:12px">(klik lilinnya ya sayang 💕)</div>
+<button class="btn" id="btn" onclick="nextStage()">Mulai 💗</button>
+
+<!-- GAME -->
+<div id="game" style="display:none">
+  <p>Tiup lilinnya ya 🔥</p>
+  <div class="candles">
+    <span class="flame" onclick="blow(this)">🔥</span>
+    <span style="font-size:42px;color:pink">18</span>
+    <span class="flame" onclick="blow(this)">🔥</span>
   </div>
-  <div id="text"></div>
 </div>
 
-<button class="btn" id="btn" onclick="nextStage()">Mulai 💗</button>
+<!-- QUESTION -->
+<div id="question" style="display:none">
+  <p>Kamu sayang aku kan? 💌</p>
+  <button onclick="yes()">IYA 💖</button>
+  <button onclick="no()">TIDAK 💔</button>
+  <div id="reaction"></div>
+</div>
+
+<!-- FINAL -->
+<div id="final" style="display:none">
+  <div id="text"></div>
+  <button class="btn" onclick="location.reload()">🔁 Ulang dari awal</button>
+</div>
 </div>
 
 <!-- AUDIO -->
@@ -181,87 +204,96 @@ body{
 <audio id="birthday" src="happybirthday.mp3"></audio>
 
 <script>
-/* PASSWORD */
+let stage=0, blown=0;
+
 function unlock(){
   if(pass.value==="ifa sayang"){
     lock.style.display="none";
-    romantis.currentTime = 6;
+    romantis.currentTime=6;
     romantis.play();
-  } else alert("Password salah 💔");
+  }else alert("Password salah 💔");
 }
 
-/* TAHAP */
-let stage=0;
 function nextStage(){
   stage++;
-  if(stage===1){
-    stageText.innerHTML="Pencet sekali lagi ya sayang,<br>ga bakal nyesel kok 💕";
-  }else if(stage===2){
-    stageText.innerHTML="Sedikit lagi…<br>semangat yaa sayangku 😘";
+  const msgs=[
+    "Eitts… belum mulai 😝",
+    "Yakin mau lanjut? 😘",
+    "Sekali lagi yaa 😆"
+  ];
+  if(stage<=msgs.length){
+    stageText.innerHTML=msgs[stage-1];
   }else{
     btn.style.display="none";
-    stageText.innerHTML="";
-    final.style.display="block";
+    game.style.display="block";
   }
 }
 
-/* CONFETTI PINK BANYAK & LAMBAT */
-function confetti(){
-  for(let i=0;i<280;i++){
-    let c=document.createElement("div");
-    c.className="confetti";
-    c.style.left=Math.random()*100+"vw";
-    document.body.appendChild(c);
-    setTimeout(()=>c.remove(),8000);
+function blow(el){
+  el.classList.add("dead");
+  el.textContent="💨";
+  blown++;
+  if(blown===2){
+    setTimeout(()=>{game.style.display="none";question.style.display="block"},600);
   }
 }
 
-/* TEKS */
+function yes(){
+  for(let i=0;i<25;i++){
+    let h=document.createElement("div");
+    h.className="heart";
+    h.style.left=Math.random()*100+"vw";
+    h.textContent="💖";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),4000);
+  }
+  reaction.innerHTML="Iyaaa aku juga sayang kamu 🥰";
+  setTimeout(showFinal,1200);
+}
+
+function no(){
+  reaction.innerHTML="😢 Kemarin sayang sekarang kok nggak";
+}
+
+function showFinal(){
+  question.style.display="none";
+  final.style.display="block";
+  romantis.pause();
+  birthday.currentTime=8;
+  birthday.play();
+  typeText();
+}
+
 const pesan=`Selamat ulang tahun, sayangku 🤍
 
-Hari ini hari yang spesial,
+Hari ini hari yang spesial, 
 hari lahir seseorang yang paling aku sayang.
-Aku bersyukur bisa ada di hidup kamu
-dan merayakan hari ini bareng kamu.
+Aku bersyukur bisa ada di hidup kamu 
+dan merayakan hari ini bareng kamu. 
 
-Di umur kamu yang ke-18 ini,
-aku berdoa semoga kamu selalu sehat,
-panjang umur, rezekinya lancar,
+Di umur kamu yang ke-18 ini, 
+aku berdoa semoga kamu selalu sehat, 
+panjang umur, rezekinya lancar, 
 dan setiap langkah hidupmu dipermudah.
 
-Semoga urusan kuliah kamu dimudahkan,
-belajar makin rajin,
-dan selalu nurut serta berbakti pada orang tua.
+Semoga urusan kuliah kamu dimudahkan, 
+belajar makin rajin, 
+dan selalu nurut serta berbakti pada orang tua. 
 
 Terima kasih sudah hadir di hidupku.
-Aku ingin terus tumbuh bareng kamu
+Aku ingin terus tumbuh bareng kamu 
 dan berjalan bersama sampai akhir hayat nanti.
-
 Aku sayang kamu 🤍
-— from fayruz zam`;
+
+— fayruz zam`;
+
 let i=0;
 function typeText(){
   if(i<pesan.length){
-    text.innerHTML+=pesan.charAt(i);
-    i++;
-    setTimeout(typeText,80);
+    text.innerHTML+=pesan.charAt(i++);
+    setTimeout(typeText,90);
   }
 }
-
-/* LILIN + AUDIO BERGANTIAN */
-function blowCandle(){
-  romantis.pause();
-  romantis.currentTime = 0;
-
-  setTimeout(()=>{
-    flame.style.display="none";
-    birthday.currentTime = 8;
-    birthday.play();
-    confetti();
-    typeText();
-  },2000);
-}
 </script>
-
 </body>
 </html>
