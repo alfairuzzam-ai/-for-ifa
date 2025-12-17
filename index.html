@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Surprise 💖</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(#7b0000,#000);
+  color:#fff;
+  overflow-x:hidden;
+}
+.container{
+  max-width:420px;
+  margin:40px auto;
+  background:#111;
+  border-radius:20px;
+  padding:20px;
+  text-align:center;
+  position:relative;
+}
+h1{margin-bottom:5px}
+.sub{color:pink;margin-bottom:15px}
+
+/* PASSWORD */
+#lock{
+  position:fixed;
+  inset:0;
+  background:linear-gradient(#ff4d6d,#7b0000);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  z-index:10;
+}
+#lock input{
+  padding:12px;
+  border-radius:20px;
+  border:none;
+  text-align:center;
+  width:220px;
+}
+#lock button{
+  margin-top:15px;
+  padding:12px 25px;
+  border:none;
+  border-radius:30px;
+  background:white;
+  color:#ff4d6d;
+  font-size:16px;
+}
+
+/* SLIDER */
+.slider{
+  display:flex;
+  overflow:hidden;
+  border-radius:15px;
+}
+.slider img{
+  width:100%;
+  flex-shrink:0;
+  animation:slide 32s infinite;
+}
+@keyframes slide{
+  0%,12%{transform:translateX(0)}
+  25%,37%{transform:translateX(-100%)}
+  50%,62%{transform:translateX(-200%)}
+  75%,87%{transform:translateX(-300%)}
+  100%{transform:translateX(0)}
+}
+
+/* BALON */
+.balloon{
+  position:fixed;
+  bottom:-100px;
+  font-size:35px;
+  animation:float 8s linear infinite;
+}
+@keyframes float{
+  to{transform:translateY(-120vh)}
+}
+
+/* CAKE */
+.cake{margin:20px 0}
+.flame{
+  font-size:40px;
+  cursor:pointer;
+  animation:flicker .6s infinite;
+}
+@keyframes flicker{
+  50%{opacity:.5}
+}
+.number{
+  font-size:48px;
+  color:pink;
+}
+
+/* BUTTON */
+.btn{
+  margin-top:20px;
+  padding:12px 25px;
+  border:none;
+  border-radius:30px;
+  background:pink;
+  font-size:16px;
+  cursor:pointer;
+}
+
+/* TEXT */
+#text{
+  font-size:14px;
+  line-height:1.6;
+  white-space:pre-line;
+}
+
+/* CONFETTI */
+.confetti{
+  position:fixed;
+  width:8px;
+  height:8px;
+  top:-10px;
+  animation:fall 3s linear forwards;
+}
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(360deg)}
+}
+</style>
+</head>
+
+<body>
+
+<!-- PASSWORD -->
+<div id="lock">
+  <h2>🔐 Password Cinta</h2>
+  <input type="password" id="pass" placeholder="kata romantis">
+  <button onclick="unlock()">Buka 💖</button>
+</div>
+
+<!-- BALON -->
+<div class="balloon" style="left:10%">🎈</div>
+<div class="balloon" style="left:30%">🎈</div>
+<div class="balloon" style="left:50%">🎈</div>
+<div class="balloon" style="left:70%">🎈</div>
+<div class="balloon" style="left:90%">🎈</div>
+
+<div class="container">
+<h1>🎉 Selamat Ulang Tahun 🎂</h1>
+<div class="sub">Dari seseorang yang spesial 💖</div>
+
+<div class="slider">
+<img src="foto1.jpeg">
+<img src="foto2.jpeg">
+<img src="foto3.jpg">
+<img src="foto4.jpg">
+<img src="foto5.jpg">
+<img src="foto6.jpg">
+<img src="foto7.jpg">
+<img src="foto8.jpg">
+</div>
+
+<div id="final" style="display:none">
+  <div class="cake">
+    <div class="flame" id="flame" onclick="blowCandle()">🔥</div>
+    <div class="number">19</div>
+    <div style="font-size:12px;color:pink">
+      (klik lilinnya ya sayang 💕)
+    </div>
+  </div>
+  <div id="text"></div>
+</div>
+
+<button class="btn" id="btn" onclick="nextStep()">Mulai 💝</button>
+</div>
+
+<audio id="lagu" loop>
+  <source src="happybirthday.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* PASSWORD */
+function unlock(){
+  if(document.getElementById("pass").value === "ifa sayang"){
+    document.getElementById("lock").style.display="none";
+  }else{
+    alert("Password salah 💔");
+  }
+}
+
+/* PESAN */
+const pesan = `
+Selamat ulang tahun, sayangku 🤍
+
+Di umurmu yang ke-19 ini, aku berdoa
+semoga kamu selalu diberi kesehatan,
+panjang umur, rezeki yang lancar,
+dan hati yang selalu dipenuhi kebahagiaan.
+
+Terima kasih sudah hadir di hidupku,
+menemani hari-hariku,
+dan menjadi rumah untuk hatiku.
+
+Aku ingin tumbuh bareng kamu,
+di saat senang maupun sulit,
+sampai akhir hayat nanti.
+
+Aku sayang kamu,
+lebih dari yang bisa aku ungkapkan 🤍
+
+— From fayruz zam 🤍
+`;
+
+let i=0;
+function typeText(){
+  if(i<pesan.length){
+    document.getElementById("text").innerHTML += pesan.charAt(i);
+    i++;
+    setTimeout(typeText,40);
+  }
+}
+
+/* CONFETTI */
+function confetti(){
+  for(let c=0;c<120;c++){
+    let cf=document.createElement("div");
+    cf.className="confetti";
+    cf.style.left=Math.random()*100+"vw";
+    cf.style.background=`hsl(${Math.random()*360},80%,60%)`;
+    document.body.appendChild(cf);
+    setTimeout(()=>cf.remove(),3000);
+  }
+}
+
+/* GAME & STEP */
+let step=0;
+let candleBlown=false;
+
+function nextStep(){
+  const btn=document.getElementById("btn");
+  const text=document.getElementById("text");
+
+  step++;
+
+  if(step===1){
+    text.innerHTML="Pencet sekali lagi ya sayang, ga bakal nyesel kok 💕";
+    btn.innerText="Lanjut 💗";
+  }
+  else if(step===2){
+    text.innerHTML="Sekarang main game kecil ya 😆<br>Klik lilinnya dulu 🎂";
+    document.getElementById("final").style.display="block";
+    btn.style.display="none";
+  }
+}
+
+/* MINI GAME */
+function blowCandle(){
+  if(candleBlown) return;
+  candleBlown=true;
+
+  document.getElementById("lagu").play();
+  confetti();
+
+  setTimeout(()=>{
+    document.getElementById("flame").style.display="none";
+    typeText();
+  },2000);
+}
+</script>
+
+</body>
+</html>
