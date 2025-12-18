@@ -1,303 +1,572 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For You 🤍</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For Ifa 🤍</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --pink:#ff5fa2;
+      --pink2:#ff7fbf;
+      --bg1:#ff6aa8;
+      --bg2:#ff3b8a;
+      --dark:rgba(10,10,12,.72);
+      --glass:rgba(18,18,22,.55);
+      --stroke:rgba(255,255,255,.14);
+      --shadow: 0 18px 55px rgba(0,0,0,.40);
+      --radius: 26px;
+    }
 
-<style>
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:'Poppins',sans-serif;
-  color:#fff;
-  overflow:hidden;
-  background:#000;
-}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:#fff;
+      overflow:hidden;
+      background: radial-gradient(1200px 800px at 30% 20%, rgba(255,255,255,.14), transparent 60%),
+                  linear-gradient(135deg, var(--bg1), var(--bg2));
+    }
 
-/* BACKGROUND */
-#bg{
-  position:fixed;
-  inset:0;
-  z-index:-2;
-  transition:1.2s ease;
-  background:linear-gradient(135deg,#ff8fb1,#ff5f7e);
-}
-#bg.photo{
-  filter:blur(10px) brightness(.55);
-}
+    /* ===== BACKGROUND LAYERS (NO TUMPUK) ===== */
+    .bg{
+      position:fixed; inset:0;
+      z-index:-2;
+      background: radial-gradient(900px 600px at 20% 15%, rgba(255,255,255,.15), transparent 55%),
+                  linear-gradient(135deg, var(--bg1), var(--bg2));
+      transition: filter .6s ease, transform .6s ease;
+    }
 
-/* CONTAINER */
-.container{
-  max-width:420px;
-  min-height:100vh;
-  margin:auto;
-  padding:20px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-}
+    .bgPhoto{
+      position:fixed; inset:0;
+      z-index:-3;
+      background-size:cover;
+      background-position:center;
+      opacity:0;
+      transform:scale(1.03);
+      transition: opacity .8s ease, transform 1.2s ease;
+    }
+    .bgPhoto.show{ opacity:1; transform:scale(1.00); }
 
-/* SLIDESHOW FRAME */
-.slider{
-  width:100%;
-  height:260px;
-  border-radius:20px;
-  overflow:hidden;
-  margin:18px 0;
-  box-shadow:0 12px 30px rgba(0,0,0,.45);
-  display:none;
-}
-.slide{
-  position:absolute;
-  inset:0;
-  background-size:contain;
-  background-position:center;
-  background-repeat:no-repeat;
-  opacity:0;
-  animation:fadeSlide 72s infinite;
-}
-.slide:nth-child(1){animation-delay:0s}
-.slide:nth-child(2){animation-delay:6s}
-.slide:nth-child(3){animation-delay:12s}
-.slide:nth-child(4){animation-delay:18s}
-.slide:nth-child(5){animation-delay:24s}
-.slide:nth-child(6){animation-delay:30s}
-.slide:nth-child(7){animation-delay:36s}
-.slide:nth-child(8){animation-delay:42s}
-.slide:nth-child(9){animation-delay:48s}
-.slide:nth-child(10){animation-delay:54s}
-.slide:nth-child(11){animation-delay:60s}
-.slide:nth-child(12){animation-delay:66s}
+    .bgOverlay{
+      position:fixed; inset:0;
+      z-index:-1;
+      background: rgba(0,0,0,.35);
+      opacity:0;
+      transition: opacity .6s ease;
+    }
+    .bgOverlay.show{opacity:1}
 
-@keyframes fadeSlide{
-  0%{opacity:0}
-  6%{opacity:1}
-  40%{opacity:1}
-  46%{opacity:0}
-  100%{opacity:0}
-}
+    .blurOn .bg{ filter: blur(10px) saturate(1.1) brightness(.92); transform:scale(1.02); }
+    .blurOn .bgOverlay{ opacity:1; }
 
-/* BUTTON */
-.btn{
-  margin-top:18px;
-  padding:12px 30px;
-  border:none;
-  border-radius:30px;
-  background:#fff;
-  color:#ff5f7e;
-  font-size:15px;
-  transition:.35s;
-}
-.btn:hover{transform:scale(1.05)}
-.fade{opacity:0;transform:translateY(8px)}
+    /* ===== CENTER WRAP ===== */
+    .wrap{
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: clamp(14px, 3vw, 26px);
+    }
 
-/* TEXT */
-#text{
-  line-height:1.7;
-  white-space:pre-line;
-  min-height:90px;
-}
+    .card{
+      width:min(520px, 92vw);
+      background: linear-gradient(180deg, rgba(20,20,24,.72), rgba(12,12,14,.65));
+      border:1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: clamp(18px, 3.2vw, 26px);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      position:relative;
+      overflow:hidden;
+    }
 
-/* PASSWORD */
-#lock{
-  position:fixed;
-  inset:0;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  background:linear-gradient(#ff7aa2,#ff3f6c);
-  z-index:10;
-}
-#lock input{
-  padding:14px;
-  border-radius:30px;
-  border:none;
-  width:240px;
-  text-align:center;
-  font-size:16px;
-}
-#lock button{
-  margin-top:16px;
-  padding:12px 30px;
-  border:none;
-  border-radius:30px;
-  background:#fff;
-  color:#ff3f6c;
-  font-weight:600;
-}
+    .card::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(520px 220px at 30% 0%, rgba(255,105,180,.20), transparent 60%),
+                  radial-gradient(520px 220px at 80% 20%, rgba(255,255,255,.10), transparent 60%);
+      pointer-events:none;
+    }
 
-/* CHOICE */
-.choice{display:flex;gap:14px;justify-content:center}
-.yes{background:#ff6fa1;color:#fff}
-.no{background:#444;color:#fff}
-.shake{animation:shake .4s}
-@keyframes shake{
-  0%,100%{transform:translateX(0)}
-  25%{transform:translateX(-6px)}
-  75%{transform:translateX(6px)}
-}
+    .title{
+      font-weight:800;
+      letter-spacing:.2px;
+      font-size: clamp(18px, 3.4vw, 22px);
+      margin:0 0 8px;
+      text-align:center;
+    }
 
-/* HEART */
-.heart{
-  position:fixed;
-  bottom:-20px;
-  font-size:22px;
-  animation:fly 4s linear forwards;
-}
-@keyframes fly{
-  to{transform:translateY(-110vh);opacity:0}
-}
+    .sub{
+      margin:0 auto 18px;
+      text-align:center;
+      opacity:.92;
+      line-height:1.55;
+      font-size: clamp(14px, 3.1vw, 15.5px);
+      max-width: 40ch;
+    }
 
-/* LILIN */
-.candles{font-size:44px;display:flex;gap:18px;align-items:center}
-.flame{cursor:pointer}
-.dead{opacity:.3;pointer-events:none}
-</style>
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.10);
+      color:#fff;
+      font-weight:700;
+      cursor:pointer;
+      transition: transform .12s ease, filter .2s ease, background .2s ease;
+      user-select:none;
+    }
+    .pill:hover{ filter:brightness(1.05); }
+    .pill:active{ transform: scale(.98); }
+
+    .pill.primary{
+      background: linear-gradient(135deg, #ff4d93, #ff84c2);
+      border:1px solid rgba(255,255,255,.22);
+      color:#1a0d12;
+    }
+
+    .pill.ghost{
+      background: rgba(255,255,255,.12);
+    }
+
+    .row{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:14px;
+      position:relative;
+      z-index:2;
+    }
+
+    .input{
+      width:min(320px, 90%);
+      margin: 0 auto;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      align-items:center;
+      position:relative;
+      z-index:2;
+    }
+    input{
+      width:100%;
+      padding: 13px 16px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.14);
+      color:#fff;
+      outline:none;
+      font-size: 15px;
+      text-align:center;
+    }
+    input::placeholder{ color: rgba(255,255,255,.70); }
+
+    .msg{
+      text-align:center;
+      margin-top:10px;
+      min-height: 22px;
+      opacity:.95;
+      font-size: 14px;
+      position:relative;
+      z-index:2;
+    }
+
+    .fadeIn{
+      animation: fadeIn .45s ease both;
+    }
+    @keyframes fadeIn{
+      from{ opacity:0; transform: translateY(6px); }
+      to{ opacity:1; transform: translateY(0); }
+    }
+
+    /* ===== LOVE QUESTION ===== */
+    .btnYes{ background: linear-gradient(135deg, #ff4d93, #ffb0d6); color:#1a0d12; border:1px solid rgba(255,255,255,.22); }
+    .btnNo { background: rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.20); }
+
+    .shake{
+      animation: shake .45s ease;
+    }
+    @keyframes shake{
+      0%,100%{ transform: translateX(0) }
+      20%{ transform: translateX(-8px) }
+      40%{ transform: translateX(8px) }
+      60%{ transform: translateX(-6px) }
+      80%{ transform: translateX(6px) }
+    }
+
+    /* ===== HEARTS (YES) ===== */
+    .heart{
+      position:fixed;
+      font-size: 18px;
+      pointer-events:none;
+      z-index:999;
+      animation: floatUp 1.9s ease forwards;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,.35));
+    }
+    @keyframes floatUp{
+      0%{ transform: translateY(0) scale(.9); opacity:0; }
+      12%{ opacity:1; }
+      100%{ transform: translateY(-130px) scale(1.25); opacity:0; }
+    }
+
+    /* ===== CANDLE 18 GAME ===== */
+    .gameWrap{
+      display:flex;
+      justify-content:center;
+      margin: 12px 0 6px;
+      position:relative;
+      z-index:2;
+    }
+
+    .cake{
+      width:min(360px, 92vw);
+      border-radius: 22px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.08);
+      padding: 16px 14px 14px;
+      text-align:center;
+    }
+
+    .candles{
+      display:flex;
+      justify-content:center;
+      align-items:flex-end;
+      gap:18px;
+      margin-top: 8px;
+    }
+
+    .digit{
+      position:relative;
+      width:120px;
+      height:150px;
+    }
+
+    /* digit "1" candle */
+    .one{
+      position:absolute;
+      left:50%; bottom:0;
+      width:26px; height:118px;
+      transform: translateX(-50%);
+      border-radius: 16px;
+      background: linear-gradient(180deg, #ffe6f1, #ff6aa8);
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,.22);
+    }
+
+    /* digit "8" candle (two loops) */
+    .eightTop,.eightBottom{
+      position:absolute;
+      left:50%;
+      width:96px;
+      height:56px;
+      transform: translateX(-50%);
+      border-radius: 44px;
+      background: linear-gradient(180deg, #ffe6f1, #ff6aa8);
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,.22);
+    }
+    .eightTop{ bottom:64px; }
+    .eightBottom{ bottom:0; }
+
+    .flame{
+      position:absolute;
+      left:50%;
+      top:-26px;
+      width:22px;
+      height:28px;
+      transform: translateX(-50%);
+      border-radius: 50% 50% 50% 50%;
+      background: radial-gradient(circle at 40% 35%, #fff6a6 0 35%, #ff7a2f 36% 75%, #ff3d8c 76% 100%);
+      filter: drop-shadow(0 10px 18px rgba(255,105,180,.35));
+      animation: flicker .65s infinite;
+      cursor:pointer;
+      user-select:none;
+    }
+    .flame:active{ transform: translateX(-50%) scale(.96); }
+    @keyframes flicker{
+      0%,100%{ transform: translateX(-50%) rotate(-2deg) scale(1); opacity:1; }
+      50%{ transform: translateX(-50%) rotate(2deg) scale(1.05); opacity:.75; }
+    }
+
+    .flame.off{
+      opacity:0;
+      animation:none;
+      pointer-events:none;
+    }
+
+    .meter{
+      width: min(320px, 92%);
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.16);
+      margin: 12px auto 0;
+      overflow:hidden;
+    }
+    .meter > div{
+      height:100%;
+      width:0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #ff4d93, #ffb0d6);
+      transition: width .18s ease;
+    }
+
+    .hint{
+      margin: 10px 0 0;
+      opacity:.95;
+      font-size: 13.5px;
+      line-height:1.45;
+    }
+
+    /* ===== CONFETTI ===== */
+    .confetti{
+      position:fixed;
+      top:-12px;
+      width:10px; height:14px;
+      border-radius: 3px;
+      background: #ff6aa8;
+      opacity:.92;
+      z-index:998;
+      animation: fall 5.8s linear forwards;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,.18));
+    }
+    @keyframes fall{
+      to{
+        transform: translateY(110vh) rotate(420deg);
+        opacity:.9;
+      }
+    }
+
+    /* ===== BIG TEXT AREA ===== */
+    .typedBox{
+      margin-top: 12px;
+      padding: 14px 14px;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      text-align:left;
+      white-space:pre-line;
+      line-height:1.7;
+      font-size: 14.5px;
+      position:relative;
+      z-index:2;
+    }
+
+    /* ===== STAGE 9 FULLSCREEN ===== */
+    .full{
+      position:fixed; inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: clamp(14px, 3vw, 28px);
+      z-index: 50;
+      background: #000;
+    }
+    .full.show{ display:flex; }
+
+    .fullLayerA, .fullLayerB{
+      position:absolute; inset:0;
+      background-size:cover;
+      background-position:center;
+      opacity:0;
+      transform: scale(1.03);
+      transition: opacity 1.25s ease, transform 2.3s ease;
+    }
+    .fullLayerA.show, .fullLayerB.show{
+      opacity:1;
+      transform: scale(1.00);
+    }
+
+    .fullShade{
+      position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,.42), rgba(0,0,0,.55));
+    }
+
+    .fullContent{
+      position:relative;
+      width: min(720px, 92vw);
+      text-align:center;
+      z-index:2;
+      color:#fff;
+    }
+
+    .finalTitle{
+      font-size: clamp(18px, 4vw, 26px);
+      font-weight: 900;
+      letter-spacing:.2px;
+      margin: 0 0 10px;
+      text-shadow: 0 10px 22px rgba(0,0,0,.45);
+    }
+
+    .finalText{
+      white-space:pre-line;
+      line-height:1.8;
+      font-size: clamp(14px, 3.6vw, 18px);
+      text-shadow: 0 10px 22px rgba(0,0,0,.55);
+      padding: 10px 8px;
+      min-height: 40vh;
+    }
+
+    .bottomBar{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+
+    /* ===== UTILS ===== */
+    .hidden{ display:none !important; }
+    .center{ text-align:center; }
+
+    /* Mobile tweaks */
+    @media (max-width:420px){
+      .card{ border-radius: 22px; }
+      .digit{ width:102px; height:142px; }
+      .eightTop,.eightBottom{ width:88px; }
+    }
+  </style>
 </head>
 
 <body>
+  <!-- BACKGROUND: gradient + (from stage2) foto12 blur -->
+  <div class="bgPhoto" id="bgPhoto"></div>
+  <div class="bg" id="bg"></div>
+  <div class="bgOverlay" id="bgOverlay"></div>
 
-<div id="bg"></div>
+  <div class="wrap">
+    <div class="card" id="card">
+      <h1 class="title" id="title">🔐 Password Cinta</h1>
+      <p class="sub" id="sub">Masukin passwordnya dulu ya sayang 🤍</p>
 
-<!-- PASSWORD -->
-<div id="lock">
-  <h2>🔐 Password Cinta</h2>
-  <input id="pass" type="password" placeholder="kata romantis">
-  <button onclick="unlock()">Buka 🤍</button>
-</div>
+      <!-- STAGE CONTENTS -->
+      <div id="stageArea">
 
-<div class="container">
+        <!-- STAGE 0: PASSWORD -->
+        <div id="stage0" class="fadeIn">
+          <div class="input">
+            <input id="pass" type="password" placeholder="password: sayang ifa" autocomplete="off" />
+            <button class="pill primary" id="btnUnlock">Buka 💖</button>
+          </div>
+          <div class="msg" id="msg0"></div>
+        </div>
 
-<div id="text">
-Pencet tombol mulainya ya sayang,  
-janji deh… kamu nggak bakal nyesel kok 🤍
-</div>
+        <!-- STAGE 1 -->
+        <div id="stage1" class="hidden">
+          <p class="sub center fadeIn">
+            Pencet tombol mulainya ya sayang,<br>
+            janji deh… kamu nggak bakal nyesel kok 🤍
+          </p>
+          <div class="row">
+            <button class="pill primary" id="btnStart">Mulai ❤️</button>
+          </div>
+        </div>
 
-<button class="btn" id="btn" onclick="next()">Mulai ❤️</button>
+        <!-- STAGE 2-6 shared -->
+        <div id="stage2to6" class="hidden">
+          <h2 class="title fadeIn" id="stageTitle">🎂 Selamat ulang tahun, sayangku 🤍</h2>
+          <p class="sub fadeIn" id="stageText"></p>
 
-<div class="slider" id="slider">
-  <div class="slide" style="background-image:url('foto1.jpeg')"></div>
-  <div class="slide" style="background-image:url('foto2.jpeg')"></div>
-  <div class="slide" style="background-image:url('foto3.jpg')"></div>
-  <div class="slide" style="background-image:url('foto4.jpg')"></div>
-  <div class="slide" style="background-image:url('foto5.jpg')"></div>
-  <div class="slide" style="background-image:url('foto6.jpg')"></div>
-  <div class="slide" style="background-image:url('foto7.jpg')"></div>
-  <div class="slide" style="background-image:url('foto8.jpg')"></div>
-  <div class="slide" style="background-image:url('foto9.jpeg')"></div>
-  <div class="slide" style="background-image:url('foto10.jpeg')"></div>
-  <div class="slide" style="background-image:url('foto11.jpeg')"></div>
-  <div class="slide" style="background-image:url('foto12.jpeg')"></div>
-</div>
+          <div id="loveQ" class="hidden">
+            <p class="sub center fadeIn" style="margin-top:10px;font-weight:800">
+              Kamu sayang aku kan?
+            </p>
+            <div class="row">
+              <button class="pill btnYes" id="btnYes">IYA ❤️</button>
+              <button class="pill btnNo"  id="btnNo">TIDAK 💔</button>
+            </div>
+            <div class="msg" id="loveMsg"></div>
+          </div>
 
-</div>
+          <div class="row" id="nextRow">
+            <button class="pill primary" id="btnNext">Lanjut</button>
+          </div>
+          <div class="msg" id="msg"></div>
+        </div>
 
-<!-- AUDIO -->
-<audio id="romantis" src="romantis.mp3"></audio>
-<audio id="birthday" src="happybirthday.mp3"></audio>
-<audio id="lagu3" src="lagu3.mp3"></audio>
+        <!-- STAGE 7: CANDLE GAME -->
+        <div id="stage7" class="hidden">
+          <h2 class="title fadeIn">🕯️ Tiup Lilinnya yaa 🎂</h2>
+          <p class="sub fadeIn">Tap apinya beberapa kali sampai padam ya sayang 🤍</p>
 
-<script>
-let stage=0, blown=0;
-const bg=document.getElementById("bg");
-const text=document.getElementById("text");
-const btn=document.getElementById("btn");
-const slider=document.getElementById("slider");
+          <div class="gameWrap">
+            <div class="cake" id="cake">
+              <div class="candles">
+                <div class="digit">
+                  <div class="one"></div>
+                  <div class="flame" id="flame1" title="tap"></div>
+                </div>
 
-function unlock(){
-  if(pass.value==="sayang ifa"){
-    lock.style.display="none";
-  }else alert("Password salah 🥺");
-}
+                <div class="digit">
+                  <div class="eightTop"></div>
+                  <div class="eightBottom"></div>
+                  <div class="flame" id="flame8" title="tap"></div>
+                </div>
+              </div>
 
-function next(){
-  btn.classList.add("fade");
-  setTimeout(()=>{
-    stage++;
-    btn.classList.remove("fade");
+              <div class="meter" aria-label="progress">
+                <div id="meterFill"></div>
+              </div>
 
-    if(stage===1){
-      text.innerHTML="Pelan-pelan yaa…\naku di sini nemenin kamu 🤍";
-      btn.innerHTML="Lanjut ❤️";
-    }
-    else if(stage===2){
-      bg.classList.add("photo");
-      bg.style.background="url('foto12.jpeg') center/cover no-repeat";
-      slider.style.display="block";
-      romantis.currentTime=6; romantis.play();
-      text.innerHTML="🎉 Selamat ulang tahun, sayangku 🤍";
-      btn.innerHTML="Lanjut lagi ❤️";
-    }
-    else if(stage===3){
-      text.innerHTML="Nggak usah buru-buru,\nkita nikmatin satu-satu ya 🤍";
-      btn.innerHTML="Sekali lagi yaa ❤️";
-    }
-    else if(stage===4){
-      text.innerHTML="Dikit lagi kok sayang,\naku pengen kamu baca sampai akhir 🤍";
-      btn.innerHTML="Terakhir, janji ❤️";
-    }
-    else if(stage===5){
-      showQuestion();
-    }
-  },350);
-}
+              <p class="hint" id="candleHint">Ayo… pelan-pelan… hembusnya yang kuat 😙💨</p>
+            </div>
+          </div>
 
-function showQuestion(){
-  btn.style.display="none";
-  text.innerHTML=`Kamu sayang aku kan? 💌
-  <div class="choice">
-    <button class="btn yes" onclick="yes()">IYA ❤️</button>
-    <button class="btn no" onclick="no()">TIDAK 💔</button>
-  </div>`;
-}
+          <div class="row">
+            <button class="pill ghost hidden" id="btnToLetter">Lanjut 🤍</button>
+          </div>
+        </div>
 
-function no(){
-  text.classList.add("shake");
-  setTimeout(()=>text.classList.remove("shake"),400);
-  text.innerHTML="kok nggak sayang…\nkemarin katanya sayang banget 🥺\nayo jujur, coba lagi ya";
-  setTimeout(showQuestion,2000);
-}
+        <!-- STAGE 8: BIRTHDAY LETTER (typed slow) -->
+        <div id="stage8" class="hidden">
+          <h2 class="title fadeIn">💌 Buat kamu…</h2>
+          <div class="typedBox" id="bdayBox"></div>
 
-function yes(){
-  for(let i=0;i<22;i++){
-    let h=document.createElement("div");
-    h.className="heart";
-    h.innerHTML="❤️";
-    h.style.left=Math.random()*100+"vw";
-    document.body.appendChild(h);
-    setTimeout(()=>h.remove(),4000);
-  }
-  text.innerHTML="Iyaa… aku juga sayang kamu 🤍";
-  setTimeout(lilinStage,1200);
-}
+          <div class="row">
+            <button class="pill primary hidden" id="btnToFinal">Next lagi sayang 🤍</button>
+            <button class="pill ghost" id="btnRestart1">Ulang dari awal 🔁</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-function lilinStage(){
-  text.innerHTML=`Tiup lilinnya ya 🔥
-  <div class="candles">
-    <span class="flame" onclick="blow(this)">🔥</span>
-    <b>18</b>
-    <span class="flame" onclick="blow(this)">🔥</span>
-  </div>`;
-}
+  <!-- STAGE 9 FULLSCREEN -->
+  <div class="full" id="finalScreen">
+    <div class="fullLayerA" id="finalA"></div>
+    <div class="fullLayerB" id="finalB"></div>
+    <div class="fullShade"></div>
 
-function blow(el){
-  el.classList.add("dead");
-  el.innerHTML="💨";
-  blown++;
-  if(blown===2){
-    romantis.pause();
-    birthday.currentTime=8; birthday.play();
-    setTimeout(ultah,1200);
-  }
-}
+    <div class="fullContent">
+      <h2 class="finalTitle">sayang baca ini yaa… 🤍</h2>
+      <div class="finalText" id="finalText"></div>
+      <div class="bottomBar">
+        <button class="pill ghost" id="btnRestart2">Ulang dari awal 🔁</button>
+      </div>
+    </div>
+  </div>
 
-const pesan=`Selamat ulang tahun, sayangku 🤍
+  <!-- AUDIO -->
+  <audio id="romantis" src="romantis.mp3" preload="auto"></audio>
+  <audio id="birthday"  src="happybirthday.mp3" preload="auto"></audio>
+  <audio id="rumah"     src="lagu3.mp3" preload="auto"></audio>
+
+  <script>
+    // ===== FILES =====
+    const BG_STAGE2 = "foto12.jpeg"; // background blur mulai stage2
+
+    // fotbar untuk stage 9 (FULLSCREEN)
+    const FOTBAR = ["foto3.jpg","foto4.jpg","foto5.jpg","foto12.jpeg"];
+
+    // ===== TEXTS =====
+    const birthdayMsg =
+`Selamat ulang tahun, sayangku 🤍
 
 Hari ini hari yang spesial, 
 hari lahir seseorang yang paling aku sayang.
@@ -320,33 +589,14 @@ Aku sayang kamu 🤍
 
 — fayruz zam`;
 
-let i=0;
-function ultah(){
-  slider.style.display="none";
-  text.innerHTML="";
-  typeText();
-}
-function typeText(){
-  if(i<pesan.length){
-    text.innerHTML+=pesan.charAt(i++);
-    setTimeout(typeText,120);
-  }else setTimeout(finalStage,1500);
-}
-
-function finalStage(){
-  birthday.pause();
-  lagu3.currentTime=10; lagu3.play();
-  bg.classList.remove("photo");
-  const fotbar=["foto3.jpg","foto4.jpg","foto5.jpg","foto12.jpeg"];
-  let idx=0;
-  bg.style.background=`url('${fotbar[0]}') center/cover no-repeat`;
-  text.innerHTML=`sayang baca ini baik- baik yaa…
+    const finalMsg =
+`sayang baca ini yaa... 
 
 Kalau capek, pulang ke aku.
 Kalau sedih, cerita ke aku.
 Kalau seneng, bagi ke aku juga.
-
 kita harus bareng terus.
+
 Kita usahakan rumah itu ya…
 tempat paling tenang,
 tempat aku dan kamu saling jaga.
@@ -354,16 +604,452 @@ tempat aku dan kamu saling jaga.
 Aku sayang kamu,
 jangan kemana-mana 🤍`;
 
-  setInterval(()=>{
-    idx=(idx+1)%fotbar.length;
-    bg.style.opacity=0;
-    setTimeout(()=>{
-      bg.style.background=`url('${fotbar[idx]}') center/cover no-repeat`;
-      bg.style.opacity=1;
-    },600);
-  },6000);
-}
-</script>
+    // Stage 2-6 config
+    const stageFlow = [
+      // stage2
+      {
+        title: "🎂 Selamat ulang tahun, sayangku 🤍",
+        text: "", // biar clean
+        button: "Lanjut",
+        showLoveQ: false
+      },
+      // stage3
+      {
+        title: "🤍",
+        text: "Pelan-pelan yaa…\naku di sini nemenin kamu 🤍",
+        button: "Lanjut lagi",
+        showLoveQ: false
+      },
+      // stage4
+      {
+        title: "🫶",
+        text: "Aku tahu kamu kuat,\ntapi kamu nggak harus sendiri…",
+        button: "Sekali lagi yaa",
+        showLoveQ: false
+      },
+      // stage5
+      {
+        title: "💗",
+        text: "Sedikit lagi…\njangan kemana-mana ya sayang 🤍",
+        button: "Terakhir, janji",
+        showLoveQ: false
+      },
+      // stage6 (love question)
+      {
+        title: "💌",
+        text: "",
+        button: "",
+        showLoveQ: true
+      }
+    ];
 
+    // ===== ELEMENTS =====
+    const body = document.body;
+    const bg = document.getElementById("bg");
+    const bgPhoto = document.getElementById("bgPhoto");
+    const bgOverlay = document.getElementById("bgOverlay");
+
+    const title = document.getElementById("title");
+    const sub = document.getElementById("sub");
+
+    const stage0 = document.getElementById("stage0");
+    const stage1 = document.getElementById("stage1");
+    const stage2to6 = document.getElementById("stage2to6");
+    const stage7 = document.getElementById("stage7");
+    const stage8 = document.getElementById("stage8");
+
+    const pass = document.getElementById("pass");
+    const btnUnlock = document.getElementById("btnUnlock");
+    const msg0 = document.getElementById("msg0");
+
+    const btnStart = document.getElementById("btnStart");
+
+    const stageTitle = document.getElementById("stageTitle");
+    const stageText = document.getElementById("stageText");
+    const btnNext = document.getElementById("btnNext");
+    const nextRow = document.getElementById("nextRow");
+    const msg = document.getElementById("msg");
+
+    const loveQ = document.getElementById("loveQ");
+    const btnYes = document.getElementById("btnYes");
+    const btnNo = document.getElementById("btnNo");
+    const loveMsg = document.getElementById("loveMsg");
+
+    const flame1 = document.getElementById("flame1");
+    const flame8 = document.getElementById("flame8");
+    const meterFill = document.getElementById("meterFill");
+    const candleHint = document.getElementById("candleHint");
+    const btnToLetter = document.getElementById("btnToLetter");
+
+    const bdayBox = document.getElementById("bdayBox");
+    const btnToFinal = document.getElementById("btnToFinal");
+    const btnRestart1 = document.getElementById("btnRestart1");
+
+    const finalScreen = document.getElementById("finalScreen");
+    const finalA = document.getElementById("finalA");
+    const finalB = document.getElementById("finalB");
+    const finalText = document.getElementById("finalText");
+    const btnRestart2 = document.getElementById("btnRestart2");
+
+    // Audios
+    const romantis = document.getElementById("romantis");
+    const birthday = document.getElementById("birthday");
+    const rumah = document.getElementById("rumah");
+
+    // ===== HELPERS =====
+    function show(el){ el.classList.remove("hidden"); }
+    function hide(el){ el.classList.add("hidden"); }
+
+    function setBlurBgPhoto(src){
+      bgPhoto.style.backgroundImage = `url('${src}')`;
+      bgPhoto.classList.add("show");
+      bgOverlay.classList.add("show");
+      body.classList.add("blurOn");
+    }
+
+    function setGradientBg(){
+      bgPhoto.classList.remove("show");
+      bgOverlay.classList.remove("show");
+      body.classList.remove("blurOn");
+    }
+
+    function swapStage(keepTitle, keepSub){
+      // just helper if needed
+      if(!keepTitle) title.textContent = "";
+      if(!keepSub) sub.textContent = "";
+    }
+
+    // typewriter (slower)
+    async function typeText(el, text, baseDelay=95, jitter=45){
+      el.textContent = "";
+      for(let i=0;i<text.length;i++){
+        el.textContent += text[i];
+        const d = baseDelay + Math.floor(Math.random()*jitter);
+        await new Promise(r => setTimeout(r, d));
+      }
+    }
+
+    // hearts burst
+    function heartBurst(count=18){
+      for(let i=0;i<count;i++){
+        const h = document.createElement("div");
+        h.className = "heart";
+        h.textContent = "💗";
+        h.style.left = (Math.random()*80 + 10) + "vw";
+        h.style.top  = (Math.random()*20 + 55) + "vh";
+        h.style.fontSize = (Math.random()*10 + 16) + "px";
+        h.style.animationDuration = (Math.random()*0.6 + 1.6) + "s";
+        document.body.appendChild(h);
+        setTimeout(()=>h.remove(), 2200);
+      }
+    }
+
+    // confetti pink (slow-ish)
+    function confettiPink(total=240){
+      for(let i=0;i<total;i++){
+        const c = document.createElement("div");
+        c.className = "confetti";
+        c.style.left = (Math.random()*100) + "vw";
+        c.style.background = `hsl(${330 + Math.random()*12}, 85%, ${65 + Math.random()*10}%)`;
+        c.style.animationDuration = (Math.random()*2.0 + 4.8) + "s";
+        c.style.transform = `rotate(${Math.random()*360}deg)`;
+        document.body.appendChild(c);
+        setTimeout(()=>c.remove(), 6500);
+      }
+    }
+
+    // safe audio play (mobile)
+    async function playAudio(aud, startAt){
+      try{
+        if(typeof startAt === "number") aud.currentTime = startAt;
+        await aud.play();
+      }catch(e){
+        // kalau autoplay diblok, user tinggal tap tombol lagi
+      }
+    }
+
+    function stopAudio(aud){
+      try{ aud.pause(); }catch(e){}
+    }
+
+    // ===== APP STATE =====
+    let flowIndex = 0;     // stage2..6 index
+    let candleProgress = 0;
+    let candleDone = false;
+
+    // stage 9 slideshow
+    let finalIdx = 0;
+    let finalUsingA = true;
+    let finalTimer = null;
+
+    function renderFlow(){
+      const s = stageFlow[flowIndex];
+      stageTitle.textContent = s.title;
+      stageText.textContent = s.text;
+
+      if(s.showLoveQ){
+        hide(nextRow);
+        show(loveQ);
+        loveMsg.textContent = "";
+        loveMsg.classList.remove("shake");
+      }else{
+        hide(loveQ);
+        show(nextRow);
+        btnNext.textContent = s.button;
+      }
+
+      // small fade message area reset
+      msg.textContent = "";
+      stageTitle.classList.remove("fadeIn"); stageText.classList.remove("fadeIn");
+      void stageTitle.offsetWidth; // reflow
+      stageTitle.classList.add("fadeIn"); stageText.classList.add("fadeIn");
+    }
+
+    // ===== STAGE TRANSITIONS =====
+    function goStage1(){
+      title.textContent = "🤍";
+      sub.textContent = "";
+      hide(stage0);
+      show(stage1);
+      stage1.classList.add("fadeIn");
+    }
+
+    function goStage2(){
+      // set background blur foto12
+      setBlurBgPhoto(BG_STAGE2);
+
+      // show flow UI
+      hide(stage1);
+      show(stage2to6);
+
+      // start romantis ONLY when entering stage2 (user gesture from btnStart)
+      stopAudio(birthday);
+      stopAudio(rumah);
+      romantis.loop = true;
+      playAudio(romantis, 6);
+
+      flowIndex = 0;
+      renderFlow();
+    }
+
+    function goStage7(){
+      hide(stage2to6);
+      show(stage7);
+      stage7.classList.add("fadeIn");
+
+      candleProgress = 0;
+      candleDone = false;
+      meterFill.style.width = "0%";
+      flame1.classList.remove("off");
+      flame8.classList.remove("off");
+      btnToLetter.classList.add("hidden");
+      candleHint.textContent = "Ayo… pelan-pelan… hembusnya yang kuat 😙💨";
+    }
+
+    async function goStage8(){
+      hide(stage7);
+      show(stage8);
+      stage8.classList.add("fadeIn");
+
+      bdayBox.textContent = "";
+      btnToFinal.classList.add("hidden");
+
+      // typing slower
+      await typeText(bdayBox, birthdayMsg, 100, 55);
+
+      btnToFinal.classList.remove("hidden");
+    }
+
+    function goStage9(){
+      // stage9 full screen + fotbar only
+      finalScreen.classList.add("show");
+
+      // stop other audios
+      stopAudio(romantis);
+      // birthday boleh tetap jalan, tapi biar clean kita stop
+      stopAudio(birthday);
+
+      rumah.loop = true;
+      playAudio(rumah, 10);
+
+      // setup layers
+      finalA.style.backgroundImage = `url('${FOTBAR[0]}')`;
+      finalB.style.backgroundImage = `url('${FOTBAR[1]}')`;
+      finalA.classList.add("show");
+      finalB.classList.remove("show");
+      finalIdx = 1;
+      finalUsingA = true;
+
+      // type final slower banget biar ngahayati
+      finalText.textContent = "";
+      typeText(finalText, finalMsg, 140, 70);
+
+      // slideshow timer (slow fade)
+      if(finalTimer) clearInterval(finalTimer);
+      finalTimer = setInterval(()=>{
+        finalIdx = (finalIdx + 1) % FOTBAR.length;
+
+        const nextSrc = FOTBAR[finalIdx];
+        if(finalUsingA){
+          finalB.style.backgroundImage = `url('${nextSrc}')`;
+          finalB.classList.add("show");
+          finalA.classList.remove("show");
+        }else{
+          finalA.style.backgroundImage = `url('${nextSrc}')`;
+          finalA.classList.add("show");
+          finalB.classList.remove("show");
+        }
+        finalUsingA = !finalUsingA;
+      }, 6500); // 6.5 detik per foto biar ga skip
+    }
+
+    function restartAll(){
+      // stop everything
+      stopAudio(romantis); stopAudio(birthday); stopAudio(rumah);
+      romantis.currentTime = 0; birthday.currentTime = 0; rumah.currentTime = 0;
+
+      // hide screens
+      finalScreen.classList.remove("show");
+      if(finalTimer) clearInterval(finalTimer);
+
+      // reset background
+      setGradientBg();
+
+      // reset stages
+      show(stage0);
+      hide(stage1); hide(stage2to6); hide(stage7); hide(stage8);
+
+      title.textContent = "🔐 Password Cinta";
+      sub.textContent = "Masukin passwordnya dulu ya sayang 🤍";
+      msg0.textContent = "";
+      pass.value = "";
+
+      flowIndex = 0;
+      candleProgress = 0;
+      candleDone = false;
+      meterFill.style.width = "0%";
+      bdayBox.textContent = "";
+      finalText.textContent = "";
+    }
+
+    // ===== EVENTS =====
+    btnUnlock.addEventListener("click", ()=>{
+      const p = (pass.value || "").trim().toLowerCase();
+      if(p === "sayang ifa"){
+        msg0.textContent = "Oke… masuk ya sayang 🤍";
+        msg0.classList.add("fadeIn");
+        setTimeout(goStage1, 250);
+      }else{
+        msg0.textContent = "Passwordnya salah 🥺 coba lagi ya…";
+        msg0.classList.remove("fadeIn");
+        void msg0.offsetWidth;
+        msg0.classList.add("fadeIn");
+      }
+    });
+
+    // enter key
+    pass.addEventListener("keydown",(e)=>{
+      if(e.key==="Enter") btnUnlock.click();
+    });
+
+    btnStart.addEventListener("click", ()=>{
+      goStage2();
+    });
+
+    btnNext.addEventListener("click", ()=>{
+      // smooth stage transition
+      stage2to6.classList.remove("fadeIn");
+      void stage2to6.offsetWidth;
+      stage2to6.classList.add("fadeIn");
+
+      flowIndex++;
+      if(flowIndex >= stageFlow.length){
+        // should never happen (last is loveQ)
+        flowIndex = stageFlow.length - 1;
+      }
+      renderFlow();
+    });
+
+    // LOVE QUESTION
+    btnYes.addEventListener("click", ()=>{
+      loveMsg.textContent = "Iyaa… aku juga sayang kamu 🤍\nlanjut yaa…";
+      loveMsg.classList.remove("shake");
+      loveMsg.classList.add("fadeIn");
+
+      heartBurst(22);
+
+      // lanjut ke mini game
+      setTimeout(goStage7, 750);
+    });
+
+    btnNo.addEventListener("click", ()=>{
+      loveMsg.textContent = "kok nggak sayang…\nkemarin katanya sayang banget 🥺\nayo jujur, coba lagi ya";
+      loveMsg.classList.remove("fadeIn");
+      loveMsg.classList.add("shake");
+      setTimeout(()=> loveMsg.classList.remove("shake"), 520);
+    });
+
+    // CANDLE GAME: tap flames several times
+    function tapCandle(){
+      if(candleDone) return;
+      candleProgress++;
+      const need = 8; // makin niat: 8 tap
+      const pct = Math.min(100, Math.round((candleProgress/need)*100));
+      meterFill.style.width = pct + "%";
+
+      const hints = [
+        "Hehe… pelan dulu 😙💨",
+        "Ayo lagi… sedikit 😙💨",
+        "Wuih hampir… 😚💨",
+        "Nah gitu… 😙💨",
+        "Kuat banget… 😳💨"
+      ];
+      candleHint.textContent = hints[Math.min(hints.length-1, Math.floor(candleProgress/2))];
+
+      if(candleProgress >= need){
+        candleDone = true;
+
+        // turn off flames after 2 sec (sesuai request lilin mati 2 detik)
+        candleHint.textContent = "Oke… sekarang tunggu 2 detik yaa 🤍";
+        setTimeout(()=>{
+          flame1.classList.add("off");
+          flame8.classList.add("off");
+
+          // stop romantis, start birthday at sec 8
+          stopAudio(romantis);
+          playAudio(birthday, 8);
+
+          confettiPink(280);
+
+          btnToLetter.classList.remove("hidden");
+          btnToLetter.textContent = "Lanjut 🤍";
+        }, 2000);
+      }
+    }
+    flame1.addEventListener("click", tapCandle);
+    flame8.addEventListener("click", tapCandle);
+
+    btnToLetter.addEventListener("click", ()=>{
+      goStage8();
+    });
+
+    btnToFinal.addEventListener("click", ()=>{
+      goStage9();
+    });
+
+    btnRestart1.addEventListener("click", restartAll);
+    btnRestart2.addEventListener("click", restartAll);
+
+    // ===== PRELOAD IMPORTANT IMAGES (avoid blank / skip) =====
+    // Preload bg + fotbar first for smoother
+    const preload = [BG_STAGE2, ...FOTBAR];
+    preload.forEach(src=>{
+      const img = new Image();
+      img.src = src;
+    });
+
+    // start state
+    restartAll();
+  </script>
 </body>
 </html>
